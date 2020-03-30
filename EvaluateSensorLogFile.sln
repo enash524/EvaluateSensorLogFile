@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A3166663-8C59-4A95-9C7F-51A2002FC0AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0911D5F5-3073-4F47-86AC-E48446ACB67A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A32DD4CF-9898-401C-A0E1-C0C8B3EB0D83}"
+	ProjectSection(SolutionItems) = preProject
+		docs\input.txt = docs\input.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateSensorLogFile.ClassLibrary.Tests", "tests\EvaluateSensorLogFile.ClassLibrary.Tests\EvaluateSensorLogFile.ClassLibrary.Tests.csproj", "{57F23E6D-0544-4BF5-A904-50044F739AAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateSensorLogFile.ConsoleApp", "src\EvaluateSensorLogFile.ConsoleApp\EvaluateSensorLogFile.ConsoleApp.csproj", "{FA2E2A06-9692-4BBD-B09E-0418FB29ACAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateSensorLogFile.ClassLibrary", "src\EvaluateSensorLogFile.ClassLibrary\EvaluateSensorLogFile.ClassLibrary.csproj", "{45BC8869-3670-457A-8CA2-0ACFC966D4A7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57F23E6D-0544-4BF5-A904-50044F739AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57F23E6D-0544-4BF5-A904-50044F739AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57F23E6D-0544-4BF5-A904-50044F739AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57F23E6D-0544-4BF5-A904-50044F739AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA2E2A06-9692-4BBD-B09E-0418FB29ACAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA2E2A06-9692-4BBD-B09E-0418FB29ACAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA2E2A06-9692-4BBD-B09E-0418FB29ACAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA2E2A06-9692-4BBD-B09E-0418FB29ACAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45BC8869-3670-457A-8CA2-0ACFC966D4A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45BC8869-3670-457A-8CA2-0ACFC966D4A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45BC8869-3670-457A-8CA2-0ACFC966D4A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45BC8869-3670-457A-8CA2-0ACFC966D4A7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57F23E6D-0544-4BF5-A904-50044F739AAF} = {0911D5F5-3073-4F47-86AC-E48446ACB67A}
+		{FA2E2A06-9692-4BBD-B09E-0418FB29ACAB} = {A3166663-8C59-4A95-9C7F-51A2002FC0AB}
+		{45BC8869-3670-457A-8CA2-0ACFC966D4A7} = {A3166663-8C59-4A95-9C7F-51A2002FC0AB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D5F3C11E-3CBB-4121-ACFB-0E70585309A5}
+	EndGlobalSection
+EndGlobal
