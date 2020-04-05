@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy /y $(SolutionDir)docs\input.txt  $(ProjectDir)$(OutDir)" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\EvaluateSensorLog.ClassLibrary\EvaluateSensorLog.ClassLibrary.csproj" />
+  </ItemGroup>
+
+</Project>
