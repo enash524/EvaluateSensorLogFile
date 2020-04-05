@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using EvaluateSensorLog.ClassLibrary.Models;
+using Microsoft.Extensions.Logging;
 
 namespace EvaluateSensorLog.ClassLibrary
 {
@@ -13,6 +14,17 @@ namespace EvaluateSensorLog.ClassLibrary
     /// <seealso cref="IEvaluateSensorLogRecords"/>
     public class EvaluateSensorLogRecords : IEvaluateSensorLogRecords
     {
+        private readonly ILogger<EvaluateSensorLogRecords> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EvaluateSensorLogRecords`1"/> class.
+        /// </summary>
+        /// <param name="logger">DI injected logger</param>/param>
+        public EvaluateSensorLogRecords(ILogger<EvaluateSensorLogRecords> logger)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Reads sensor log input text file and outputs sensor log report
         /// </summary>
@@ -23,6 +35,7 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (string.IsNullOrWhiteSpace(logContentsStr))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(logContentsStr)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(logContentsStr));
             }
 
@@ -42,6 +55,7 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (readings == null || readings.Count == 0)
             {
+                _logger.LogError($"{Messages.NullEmptyCollection} (Parameter '{nameof(readings)}')");
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(readings));
             }
 
@@ -63,6 +77,7 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (humidityModel == null || humidityModel.Count == 0)
             {
+                _logger.LogError($"{Messages.NullEmptyCollection} (Parameter '{nameof(humidityModel)}')");
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(humidityModel));
             }
 
@@ -91,6 +106,7 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (string.IsNullOrWhiteSpace(logContentsStr))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(logContentsStr)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(logContentsStr));
             }
 
@@ -202,6 +218,7 @@ namespace EvaluateSensorLog.ClassLibrary
                         break;
 
                     default:
+                        _logger.LogError($"Sensor type {line[0]} has not been implemented yet.");
                         throw new NotImplementedException($"Sensor type {line[0]} has not been implemented yet.");
                 }
             }
@@ -220,6 +237,7 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (monoxideModel == null || monoxideModel.Count == 0)
             {
+                _logger.LogError($"{Messages.NullEmptyCollection} (Parameter '{nameof(monoxideModel)}')");
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(monoxideModel));
             }
 
@@ -247,11 +265,13 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (sensorLogModel == null)
             {
+                _logger.LogError($"{Messages.NullValue} (Parameter '{nameof(sensorLogModel)}')");
                 throw new ArgumentException(Messages.NullValue, nameof(sensorLogModel));
             }
 
             if (sensorLogModel.ReferenceValues == null)
             {
+                _logger.LogError($"{Messages.NullValue} (Parameter '{nameof(sensorLogModel.ReferenceValues)}')");
                 throw new ArgumentException(Messages.NullValue, nameof(sensorLogModel.ReferenceValues));
             }
 
@@ -291,6 +311,7 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (thermometerModel == null || thermometerModel.Count == 0)
             {
+                _logger.LogError($"{Messages.NullEmptyCollection} (Parameter '{nameof(thermometerModel)}')");
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(thermometerModel));
             }
 
@@ -347,21 +368,25 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (string.IsNullOrWhiteSpace(timestampInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(timestampInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(timestampInputValue));
             }
 
             if (string.IsNullOrWhiteSpace(decimalInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(decimalInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(decimalInputValue));
             }
 
             if (!DateTime.TryParse(timestampInputValue, out DateTime timestamp))
             {
+                _logger.LogError($"{Messages.InvalidDateTimeValue} (Parameter '{nameof(timestampInputValue)}')");
                 throw new ArgumentException(Messages.InvalidDateTimeValue, nameof(timestampInputValue));
             }
 
             if (!decimal.TryParse(decimalInputValue, out decimal value))
             {
+                _logger.LogError($"{Messages.InvalidDecimalValue} (Parameter '{nameof(decimalInputValue)}')");
                 throw new ArgumentException(Messages.InvalidDecimalValue, nameof(decimalInputValue));
             }
 
@@ -388,21 +413,25 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (string.IsNullOrWhiteSpace(timestampInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(timestampInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(timestampInputValue));
             }
 
             if (string.IsNullOrWhiteSpace(integerInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(integerInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(integerInputValue));
             }
 
             if (!DateTime.TryParse(timestampInputValue, out DateTime timestamp))
             {
+                _logger.LogError($"{Messages.InvalidDateTimeValue} (Parameter '{nameof(timestampInputValue)}')");
                 throw new ArgumentException(Messages.InvalidDateTimeValue, nameof(timestampInputValue));
             }
 
             if (!int.TryParse(integerInputValue, out int value))
             {
+                _logger.LogError($"{Messages.InvalidIntegerValue} (Parameter '{nameof(integerInputValue)}')");
                 throw new ArgumentException(Messages.InvalidIntegerValue, nameof(integerInputValue));
             }
 
@@ -430,31 +459,37 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             if (string.IsNullOrWhiteSpace(thermometerInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(thermometerInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(thermometerInputValue));
             }
 
             if (string.IsNullOrWhiteSpace(humidityInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(humidityInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(humidityInputValue));
             }
 
             if (string.IsNullOrWhiteSpace(monoxideInputValue))
             {
+                _logger.LogError($"{Messages.NullWhitespaceString} (Parameter '{nameof(monoxideInputValue)}')");
                 throw new ArgumentException(Messages.NullWhitespaceString, nameof(monoxideInputValue));
             }
 
             if (!decimal.TryParse(thermometerInputValue, out decimal thermometerValue))
             {
+                _logger.LogError($"{Messages.InvalidDecimalValue} (Parameter '{nameof(thermometerInputValue)}')");
                 throw new ArgumentException(Messages.InvalidDecimalValue, nameof(thermometerInputValue));
             }
 
             if (!decimal.TryParse(humidityInputValue, out decimal humidityValue))
             {
+                _logger.LogError($"{Messages.InvalidDecimalValue} (Parameter '{nameof(humidityInputValue)}')");
                 throw new ArgumentException(Messages.InvalidDecimalValue, nameof(humidityInputValue));
             }
 
             if (!int.TryParse(monoxideInputValue, out int monoxideValue))
             {
+                _logger.LogError($"{Messages.InvalidIntegerValue} (Parameter '{nameof(monoxideInputValue)}')");
                 throw new ArgumentException(Messages.InvalidIntegerValue, nameof(monoxideInputValue));
             }
 

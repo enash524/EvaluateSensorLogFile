@@ -6,24 +6,43 @@ using System.Text.Json;
 using EvaluateSensorLog.ClassLibrary.Models;
 using EvaluateSensorLog.ClassLibrary.Tests.TestData;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
 using Xunit;
 
 namespace EvaluateSensorLog.ClassLibrary.Tests
 {
     public class LogFileTests
     {
+        private readonly IEvaluateSensorLogRecords _evaluateSensorLogRecords;
+        private readonly Mock<ILogger<EvaluateSensorLogRecords>> _logger;
+        private readonly Type _type;
+        private readonly object _logFile;
+        private readonly MethodInfo[] _methodInfos;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogFileTests`1"/> class.
+        /// </summary>
+        public LogFileTests()
+        {
+            _logger = new Mock<ILogger<EvaluateSensorLogRecords>>();
+            _evaluateSensorLogRecords = new EvaluateSensorLogRecords(_logger.Object);
+            _type = typeof(EvaluateSensorLogRecords);
+            _logFile = Activator.CreateInstance(_type, _logger.Object);
+            _methodInfos = _type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
+        }
+
         [Theory]
         [ClassData(typeof(ComputeStandardDeviationInvalidInputTestData))]
         public void ComputeStandardDeviationInvalidInputTestData(List<DecimalReadingModel> readings, string expected)
         {
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            // Arrange
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("ComputeStandardDeviation") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { readings });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { readings });
 
             // Assert
             actual
@@ -38,14 +57,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void ComputeStandardDeviationTest(List<DecimalReadingModel> readings, decimal expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("ComputeStandardDeviation") && x.IsPrivate)
                 .First();
 
             // Act
-            decimal actual = (decimal)methodInfo.Invoke(logFile, new object[] { readings });
+            decimal actual = (decimal)methodInfo.Invoke(_logFile, new object[] { readings });
             actual = Math.Round(actual, 1);
 
             // Assert
@@ -59,14 +76,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateHumidityLogRecordsInvalidInputTest(List<HumidityModel> humidityModel, decimal referenceValue, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateHumidityLogRecords") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { humidityModel, referenceValue });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { humidityModel, referenceValue });
 
             // Assert
             actual
@@ -81,14 +96,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateHumidityLogRecordsTest(List<HumidityModel> humidityModel, decimal referenceValue, List<KeyValuePair<string, string>> expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateHumidityLogRecords") && x.IsPrivate)
                 .First();
 
             // Act
-            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(logFile, new object[] { humidityModel, referenceValue });
+            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(_logFile, new object[] { humidityModel, referenceValue });
 
             // Assert
             actual
@@ -105,14 +118,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateInputLogFileInvalidInputTest(string logContentsStr, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateInputLogFile") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { logContentsStr });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { logContentsStr });
 
             // Assert
             actual
@@ -127,14 +138,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateInputLogFileTest(string logContentsStr, SensorLogModel expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateInputLogFile") && x.IsPrivate)
                 .First();
 
             // Act
-            SensorLogModel actual = (SensorLogModel)methodInfo.Invoke(logFile, new object[] { logContentsStr });
+            SensorLogModel actual = (SensorLogModel)methodInfo.Invoke(_logFile, new object[] { logContentsStr });
 
             // Assert
             actual
@@ -147,10 +156,9 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateLogFileInvalidInputTest(string logContentsStr, string expected)
         {
             // Arrange
-            IEvaluateSensorLogRecords logFile = new EvaluateSensorLogRecords();
 
             // Act
-            Action actual = () => logFile.EvaluateLogFile(logContentsStr);
+            Action actual = () => _evaluateSensorLogRecords.EvaluateLogFile(logContentsStr);
 
             // Assert
             actual
@@ -164,10 +172,9 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateLogFileTest(string logContentsStr, string expected)
         {
             // Arrange
-            IEvaluateSensorLogRecords logFile = new EvaluateSensorLogRecords();
 
             // Act
-            string actual = logFile.EvaluateLogFile(logContentsStr);
+            string actual = _evaluateSensorLogRecords.EvaluateLogFile(logContentsStr);
 
             // Assert
             actual
@@ -194,40 +201,16 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         }
 
         [Theory]
-        [ClassData(typeof(EvaluateMonoxideLogRecordsTestInvalidInputTestData))]
-        public void EvaluateMonoxideLogRecordsTestInvalidInputTest(List<MonoxideModel> monoxideModel, int referenceValue, string expected)
-        {
-            // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(x => x.Name.Equals("EvaluateMonoxideLogRecords") && x.IsPrivate)
-                .First();
-
-            // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { monoxideModel, referenceValue });
-
-            // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
-        }
-
-        [Theory]
         [ClassData(typeof(EvaluateMonoxideLogRecordsTestData))]
         public void EvaluateMonoxideLogRecordsTest(List<MonoxideModel> monoxideModel, int referenceValue, List<KeyValuePair<string, string>> expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateMonoxideLogRecords") && x.IsPrivate)
                 .First();
 
             // Act
-            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(logFile, new object[] { monoxideModel, referenceValue });
+            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(_logFile, new object[] { monoxideModel, referenceValue });
 
             // Assert
             actual
@@ -236,18 +219,16 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         }
 
         [Theory]
-        [ClassData(typeof(ValidateSensorLogRecordsInvalidInputTestData))]
-        public void ValidateSensorLogRecordsInvalidInputTest(SensorLogModel sensorLogModel, string expected)
+        [ClassData(typeof(EvaluateMonoxideLogRecordsTestInvalidInputTestData))]
+        public void EvaluateMonoxideLogRecordsTestInvalidInputTest(List<MonoxideModel> monoxideModel, int referenceValue, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(x => x.Name.Equals("ValidateSensorLogRecords") && x.IsPrivate)
+            MethodInfo methodInfo = _methodInfos
+                .Where(x => x.Name.Equals("EvaluateMonoxideLogRecords") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { sensorLogModel });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { monoxideModel, referenceValue });
 
             // Assert
             actual
@@ -255,26 +236,6 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
                 .Throw<TargetInvocationException>()
                 .WithInnerException<ArgumentException>()
                 .WithMessage(expected);
-        }
-
-        [Theory]
-        [ClassData(typeof(ValidateSensorLogRecordsTestData))]
-        public void ValidateSensorLogRecordsTest(SensorLogModel sensorLogModel, string expected)
-        {
-            // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
-                .Where(x => x.Name.Equals("ValidateSensorLogRecords") && x.IsPrivate)
-                .First();
-
-            // Act
-            string actual = (string)methodInfo.Invoke(logFile, new object[] { sensorLogModel });
-
-            // Assert
-            actual
-                .Should()
-                .BeEquivalentTo(expected);
         }
 
         [Theory]
@@ -282,14 +243,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateThermometerLogRecordsInvalidInputTest(List<ThermometerModel> thermometerModel, decimal referenceValue, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateThermometerLogRecords") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { thermometerModel, referenceValue });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { thermometerModel, referenceValue });
 
             // Assert
             actual
@@ -304,19 +263,17 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void EvaluateThermometerLogRecordsTest(List<ThermometerModel> thermometerModel, decimal referenceValue, List<KeyValuePair<string, string>> expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("EvaluateThermometerLogRecords") && x.IsPrivate)
                 .First();
 
             // Act
-            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(logFile, new object[] { thermometerModel, referenceValue });
+            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(_logFile, new object[] { thermometerModel, referenceValue });
 
             // Assert
             actual
                 .Should()
-                .NotBeNull()
+                .NotBeNullOrEmpty()
                 .And
                 .HaveCount(expected.Count)
                 .And
@@ -328,14 +285,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void HandleDecimalReadingInvalidInputTest(string timestampInputValue, string decimalInputValue, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("HandleDecimalReading") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { timestampInputValue, decimalInputValue });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { timestampInputValue, decimalInputValue });
 
             // Assert
             actual
@@ -350,14 +305,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void HandleDecimalReadingTest(string timestampInputValue, string decimalInputValue, DecimalReadingModel expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("HandleDecimalReading") && x.IsPrivate)
                 .First();
 
             // Act
-            DecimalReadingModel actual = (DecimalReadingModel)methodInfo.Invoke(logFile, new object[] { timestampInputValue, decimalInputValue });
+            DecimalReadingModel actual = (DecimalReadingModel)methodInfo.Invoke(_logFile, new object[] { timestampInputValue, decimalInputValue });
 
             // Assert
             actual
@@ -370,14 +323,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void HandleIntegerReadingInvalidInputTest(string timestampInputValue, string integerInputValue, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("HandleIntegerReading") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { timestampInputValue, integerInputValue });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { timestampInputValue, integerInputValue });
 
             // Assert
             actual
@@ -392,14 +343,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void HandleIntegerReadingTest(string timestampInputValue, string integerInputValue, IntegerReadingModel expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("HandleIntegerReading") && x.IsPrivate)
                 .First();
 
             // Act
-            IntegerReadingModel actual = (IntegerReadingModel)methodInfo.Invoke(logFile, new object[] { timestampInputValue, integerInputValue });
+            IntegerReadingModel actual = (IntegerReadingModel)methodInfo.Invoke(_logFile, new object[] { timestampInputValue, integerInputValue });
 
             // Assert
             actual
@@ -412,14 +361,12 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void HandleReferenceValuesLogRecordInvalidInputTest(string thermometerInputValue, string humidityInputValue, string monoxideInputValue, string expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("HandleReferenceValuesLogRecord") && x.IsPrivate)
                 .First();
 
             // Act
-            Action actual = () => methodInfo.Invoke(logFile, new object[] { thermometerInputValue, humidityInputValue, monoxideInputValue });
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { thermometerInputValue, humidityInputValue, monoxideInputValue });
 
             // Assert
             actual
@@ -434,14 +381,50 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
         public void HandleReferenceValuesLogRecordTest(string thermometerInputValue, string humidityInputValue, string monoxideInputValue, ReferenceValuesModel expected)
         {
             // Arrange
-            Type type = typeof(EvaluateSensorLogRecords);
-            object logFile = Activator.CreateInstance(type);
-            MethodInfo methodInfo = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+            MethodInfo methodInfo = _methodInfos
                 .Where(x => x.Name.Equals("HandleReferenceValuesLogRecord") && x.IsPrivate)
                 .First();
 
             // Act
-            ReferenceValuesModel actual = (ReferenceValuesModel)methodInfo.Invoke(logFile, new object[] { thermometerInputValue, humidityInputValue, monoxideInputValue });
+            ReferenceValuesModel actual = (ReferenceValuesModel)methodInfo.Invoke(_logFile, new object[] { thermometerInputValue, humidityInputValue, monoxideInputValue });
+
+            // Assert
+            actual
+                .Should()
+                .BeEquivalentTo(expected);
+        }
+
+        [Theory]
+        [ClassData(typeof(ValidateSensorLogRecordsInvalidInputTestData))]
+        public void ValidateSensorLogRecordsInvalidInputTest(SensorLogModel sensorLogModel, string expected)
+        {
+            // Arrange
+            MethodInfo methodInfo = _methodInfos
+                .Where(x => x.Name.Equals("ValidateSensorLogRecords") && x.IsPrivate)
+                .First();
+
+            // Act
+            Action actual = () => methodInfo.Invoke(_logFile, new object[] { sensorLogModel });
+
+            // Assert
+            actual
+                .Should()
+                .Throw<TargetInvocationException>()
+                .WithInnerException<ArgumentException>()
+                .WithMessage(expected);
+        }
+
+        [Theory]
+        [ClassData(typeof(ValidateSensorLogRecordsTestData))]
+        public void ValidateSensorLogRecordsTest(SensorLogModel sensorLogModel, string expected)
+        {
+            // Arrange
+            MethodInfo methodInfo = _methodInfos
+                .Where(x => x.Name.Equals("ValidateSensorLogRecords") && x.IsPrivate)
+                .First();
+
+            // Act
+            string actual = (string)methodInfo.Invoke(_logFile, new object[] { sensorLogModel });
 
             // Assert
             actual

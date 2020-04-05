@@ -1,7 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using EvaluateSensorLog.ClassLibrary;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace EvaluateSensorLog.ConsoleApp
 {
@@ -11,30 +13,61 @@ namespace EvaluateSensorLog.ConsoleApp
     internal class Program
     {
         /// <summary>
+        /// Use this method to add services to the container
+        /// </summary>
+        /// <returns>Services container</returns>
+        private static IServiceCollection ConfigureServices()
+        {
+            IServiceCollection services = new ServiceCollection();
+            IConfiguration config = LoadConfiguration();
+
+            // Add the config to our DI container for later user
+            services.AddSingleton(config);
+
+            services
+                .AddLogging(configure =>
+                {
+                    configure
+                        .AddConfiguration(config.GetSection("Logging"))
+                        .AddConsole(config =>
+                        {
+                            config.TimestampFormat = "yyyy-MM-dd hh:mm:ss tt ";
+                        });
+                })
+                .AddTransient<IEvaluateSensorLogRecords, EvaluateSensorLogRecords>()
+                .AddTransient<ConsoleApplication>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Use this method to load the configuration file
+        /// </summary>
+        /// <returns>Set of key/value application configuration properties</returns>
+        private static IConfiguration LoadConfiguration()
+        {
+            IConfigurationBuilder builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+            return builder.Build();
+        }
+
+        /// <summary>
         /// Main entry point to ConsoleApp
         /// </summary>
         /// <param name="args">Collection of command line arguments. Currently unused.</param>
         private static async Task Main(string[] args)
         {
-            IEvaluateSensorLogRecords evaluateSensorLogRecords = new EvaluateSensorLogRecords();
+            // Create service collection and configure our services
+            IServiceCollection services = ConfigureServices();
 
-            try
-            {
-                string input = await File.ReadAllTextAsync("input.txt");
-                string output = evaluateSensorLogRecords.EvaluateLogFile(input);
+            // Generate a provider
+            ServiceProvider serviceProvider = services.BuildServiceProvider();
+            serviceProvider.GetService<ILogger<Program>>().LogInformation("serviceProvider built");
 
-                Console.WriteLine("Devices and classification:");
-                Console.WriteLine(output);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception: {ex}");
-            }
-            finally
-            {
-                Console.WriteLine("--- Press Any Key To Continue ---");
-                Console.ReadKey(true);
-            }
+            // Kick off our actual code
+            await serviceProvider.GetService<ConsoleApplication>().Run();
         }
     }
 }
