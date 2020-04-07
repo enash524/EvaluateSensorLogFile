@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData
 {
-    public class ValidateSensorLogRecordsInvalidInputTestData : IEnumerable<object[]>
+    public class ValidateSensorLogRecordsInvalidInput : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {

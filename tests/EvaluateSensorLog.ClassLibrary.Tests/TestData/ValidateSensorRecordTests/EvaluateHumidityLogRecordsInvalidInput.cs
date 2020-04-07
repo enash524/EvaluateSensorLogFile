@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData
 {
-    public class EvaluateHumidityLogRecordsInvalidInputTestData : IEnumerable<object[]>
+    public class EvaluateHumidityLogRecordsInvalidInput : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {

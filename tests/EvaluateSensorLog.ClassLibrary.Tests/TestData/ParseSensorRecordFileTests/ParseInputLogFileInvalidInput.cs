@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ParseSensorRecordFileTests
 {
-    public class EvaluateLogFileInvalidInputTestData : IEnumerable<object[]>
+    public class ParseInputLogFileInvalidInput : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {

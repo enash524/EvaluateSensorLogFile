@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData
 {
-    public class ComputeStandardDeviationTestData : IEnumerable<object[]>
+    public class ComputeStandardDeviation : IEnumerable<object[]>
     {
         private static readonly List<DecimalReadingModel> readings = new List<DecimalReadingModel>
         {

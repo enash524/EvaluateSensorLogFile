@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ParseSensorRecordFileTests
 {
-    public class EvaluateInputLogFileTestData : IEnumerable<object[]>
+    public class ParseInputLogFile : IEnumerable<object[]>
     {
         private static readonly string[] input = new string[7]
         {
@@ -20,7 +20,7 @@ namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
 
         private static readonly SensorLogModel sensorLogModel = new SensorLogModel();
 
-        public EvaluateInputLogFileTestData()
+        public ParseInputLogFile()
         {
             ReferenceValuesModel referenceValuesModel = new ReferenceValuesModel
             {

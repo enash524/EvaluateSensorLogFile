@@ -1,4 +1,4 @@
-﻿namespace EvaluateSensorLog.ClassLibrary
+﻿namespace EvaluateSensorLog.ClassLibrary.Interfaces
 {
     /// <summary>
     /// Defines the methods for parsing and validating sensor reading records

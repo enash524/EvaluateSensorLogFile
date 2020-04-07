@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ParseSensorRecordFileTests
 {
-    public class HandleIntegerReadingTestData : IEnumerable<object[]>
+    public class HandleIntegerReading : IEnumerable<object[]>
     {
         private static readonly IntegerReadingModel expected = new IntegerReadingModel
         {

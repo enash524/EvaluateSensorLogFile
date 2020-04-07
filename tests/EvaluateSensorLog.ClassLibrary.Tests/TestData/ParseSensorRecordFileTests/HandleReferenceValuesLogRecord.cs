@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ParseSensorRecordFileTests
 {
-    public class HandleReferenceValuesLogRecordTestData : IEnumerable<object[]>
+    public class HandleReferenceValuesLogRecord : IEnumerable<object[]>
     {
         private static readonly ReferenceValuesModel expected = new ReferenceValuesModel
         {

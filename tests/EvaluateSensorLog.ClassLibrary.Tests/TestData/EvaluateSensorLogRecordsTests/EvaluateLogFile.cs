@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.EvaluateSensorLogRecordsTests
 {
-    public class EvaluateLogFileTestData : IEnumerable<object[]>
+    public class EvaluateLogFile : IEnumerable<object[]>
     {
         private const string expected = "{\r\n  \"temp-1\": \"precise\",\r\n  \"temp-2\": \"ultra precise\",\r\n  \"hum-1\": \"keep\",\r\n  \"hum-2\": \"discard\",\r\n  \"mon-1\": \"keep\",\r\n  \"mon-2\": \"discard\"\r\n}";
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using EvaluateSensorLog.ClassLibrary;
+using EvaluateSensorLog.ClassLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace EvaluateSensorLog.ConsoleApp

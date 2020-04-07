@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData
 {
-    public class EvaluateMonoxideLogRecordsTestData : IEnumerable<object[]>
+    public class EvaluateMonoxideLogRecords : IEnumerable<object[]>
     {
         private static readonly List<KeyValuePair<string, string>> expected = new List<KeyValuePair<string, string>>
         {

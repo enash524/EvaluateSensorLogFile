@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using EvaluateSensorLog.ClassLibrary.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData
+namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData
 {
-    public class ValidateSensorLogRecordsTestData : IEnumerable<object[]>
+    public class ValidateSensorLogRecords : IEnumerable<object[]>
     {
         private const string expected = "{\r\n  \"test-1\": \"ultra precise\",\r\n  \"test-2\": \"precise\",\r\n  \"test-3\": \"keep\",\r\n  \"test-4\": \"discard\",\r\n  \"test-5\": \"keep\",\r\n  \"test-6\": \"discard\"\r\n}";
 
         private static readonly SensorLogModel sensorLogModel = new SensorLogModel();
 
-        public ValidateSensorLogRecordsTestData()
+        public ValidateSensorLogRecords()
         {
             ReferenceValuesModel referenceValuesModel = new ReferenceValuesModel
             {

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using EvaluateSensorLog.ClassLibrary.Models;
 
 namespace EvaluateSensorLog.ClassLibrary.Interfaces
 {
     public interface IValidateSensorRecord
     {
+        string ValidateSensorLogRecords(SensorLogModel sensorLogModel);
     }
 }
