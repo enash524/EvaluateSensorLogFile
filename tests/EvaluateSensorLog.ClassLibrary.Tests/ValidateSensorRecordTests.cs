@@ -138,7 +138,7 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
             // Assert
             actual
                 .Should()
-                .NotBeNull()
+                .NotBeNullOrEmpty()
                 .And
                 .HaveCount(expected.Count)
                 .And
