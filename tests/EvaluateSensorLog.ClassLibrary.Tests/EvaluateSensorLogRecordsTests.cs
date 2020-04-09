@@ -43,6 +43,22 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
                 .Should()
                 .Throw<ArgumentException>()
                 .WithMessage(expected);
+
+            _logger.Invocations.Count
+                .Should()
+                .Be(1);
+
+            _logger.Invocations[0].Arguments[0]
+                .Should()
+                .Be(LogLevel.Error);
+
+            _logger
+                .Verify(x => x.Log(LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                    It.IsAny<Exception>(),
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                    Times.Once());
         }
 
         [Theory]
