@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using EvaluateSensorLog.ClassLibrary.Models;
 
 namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.EvaluateSensorLogRecordsTests
 {

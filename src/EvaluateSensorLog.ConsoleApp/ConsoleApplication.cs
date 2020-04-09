@@ -44,7 +44,6 @@ namespace EvaluateSensorLog.ConsoleApp
                 Console.WriteLine("--- Press Any Key To Continue ---");
                 Console.ReadKey(true);
             }
-
         }
     }
 }
