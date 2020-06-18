@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EvaluateSensorLog.ClassLibrary.Models
+namespace EvaluateSensorLog.Domain.Models
 {
     /// <summary>
     /// Represents the collection of reference values and sensor reading records

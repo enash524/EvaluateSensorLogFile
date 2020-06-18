@@ -1,22 +1,44 @@
 ﻿using System;
+using System.IO;
 using System.Text.RegularExpressions;
-using EvaluateSensorLog.ClassLibrary.Interfaces;
-using EvaluateSensorLog.ClassLibrary.Models;
+using System.Threading.Tasks;
+using EvaluateSensorLog.Data.Interfaces;
+using EvaluateSensorLog.Domain;
+using EvaluateSensorLog.Domain.Models;
 using Microsoft.Extensions.Logging;
 
-namespace EvaluateSensorLog.ClassLibrary
+namespace EvaluateSensorLog.Data.Repositories
 {
-    public class ParseSensorRecordFile : IParseSensorRecordFile
+    /// <summary>
+    /// Contains methods for parsing a sensor log record file
+    /// </summary>
+    public class ParseSensorRecordRepository : IParseSensorRecordRepository
     {
-        private readonly ILogger<ParseSensorRecordFile> _logger;
+        /// <summary>
+        /// DI injected logger
+        /// </summary>
+        private readonly ILogger<ParseSensorRecordRepository> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParseSensorRecordFile`1"/> class.
+        /// Initializes a new instance of the <see cref="ParseSensorRecordRepository`1"/> class.
         /// </summary>
         /// <param name="logger">DI injected logger</param>
-        public ParseSensorRecordFile(ILogger<ParseSensorRecordFile> logger)
+        public ParseSensorRecordRepository(ILogger<ParseSensorRecordRepository> logger)
         {
             _logger = logger;
+        }
+
+        /// <summary>
+        /// Parses an input file and returns the resulting sensor log model
+        /// </summary>
+        /// <param name="path">The path to the sensor log record to parse</param>
+        /// <returns>A task representing the resulting sensor log model</returns>
+        public async Task<SensorLogModel> ParseInputLogFileAsync(string path)
+        {
+            string input = await File.ReadAllTextAsync(path);
+            SensorLogModel model = ParseInputLogFile(input);
+
+            return model;
         }
 
         /// <summary>
@@ -26,7 +48,7 @@ namespace EvaluateSensorLog.ClassLibrary
         /// <exception cref="ArgumentException">logContentStr is null or whitespace</exception>
         /// <exception cref="NotImplementedException">Invalid record type is entered</exception>
         /// <returns>The sensor log model representing the sensors and reading log records</returns>
-        public SensorLogModel ParseInputLogFile(string logContentsStr)
+        private SensorLogModel ParseInputLogFile(string logContentsStr)
         {
             if (string.IsNullOrWhiteSpace(logContentsStr))
             {

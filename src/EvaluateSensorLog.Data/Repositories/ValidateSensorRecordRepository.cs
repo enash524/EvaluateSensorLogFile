@@ -2,21 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using EvaluateSensorLog.ClassLibrary.Interfaces;
-using EvaluateSensorLog.ClassLibrary.Models;
+using EvaluateSensorLog.Data.Interfaces;
+using EvaluateSensorLog.Domain;
+using EvaluateSensorLog.Domain.Models;
 using Microsoft.Extensions.Logging;
 
-namespace EvaluateSensorLog.ClassLibrary
+namespace EvaluateSensorLog.Data.Repositories
 {
-    public class ValidateSensorRecord : IValidateSensorRecord
+    /// <summary>
+    /// Contains methods for validating sensor records
+    /// </summary>
+    public class ValidateSensorRecordRepository : IValidateSensorRecordRepository
     {
-        private readonly ILogger<ValidateSensorRecord> _logger;
+        /// <summary>
+        /// DI injected logger
+        /// </summary>
+        private readonly ILogger<ValidateSensorRecordRepository> _logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidateSensorRecord`1"/> class.
+        /// Initializes a new instance of the <see cref="ValidateSensorRecordRepository`1"/> class.
         /// </summary>
         /// <param name="logger">DI injected logger</param>
-        public ValidateSensorRecord(ILogger<ValidateSensorRecord> logger)
+        public ValidateSensorRecordRepository(ILogger<ValidateSensorRecordRepository> logger)
         {
             _logger = logger;
         }
@@ -25,20 +32,20 @@ namespace EvaluateSensorLog.ClassLibrary
         /// Reads the sensors and the log records and generates the quality control evaluation for the sensors
         /// </summary>
         /// <param name="sensorLogModel">The sensor log input model</param>
-        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ArgumentNullException">sensorLogModel is null or sensorLogModel.ReverenceValues is null</exception>
         /// <returns>A JSON string representing the sensor log quality control evaluation</returns>
         public string ValidateSensorLogRecords(SensorLogModel sensorLogModel)
         {
             if (sensorLogModel == null)
             {
                 _logger.LogError($"{Messages.NullValue} (Parameter '{nameof(sensorLogModel)}')");
-                throw new ArgumentException(Messages.NullValue, nameof(sensorLogModel));
+                throw new ArgumentNullException(nameof(sensorLogModel), Messages.NullValue);
             }
 
             if (sensorLogModel.ReferenceValues == null)
             {
                 _logger.LogError($"{Messages.NullValue} (Parameter '{nameof(sensorLogModel.ReferenceValues)}')");
-                throw new ArgumentException(Messages.NullValue, nameof(sensorLogModel.ReferenceValues));
+                throw new ArgumentNullException(nameof(sensorLogModel.ReferenceValues), Messages.NullValue);
             }
 
             Dictionary<string, string> results = new Dictionary<string, string>();

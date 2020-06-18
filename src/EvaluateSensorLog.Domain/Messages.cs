@@ -1,4 +1,4 @@
-﻿namespace EvaluateSensorLog.ClassLibrary
+﻿namespace EvaluateSensorLog.Domain
 {
     /// <summary>
     /// Collection of common error messages

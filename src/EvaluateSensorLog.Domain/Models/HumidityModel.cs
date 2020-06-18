@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EvaluateSensorLog.ClassLibrary.Models
+namespace EvaluateSensorLog.Domain.Models
 {
     /// <summary>
     /// Represents a humidity sensor name and sensor reading records

@@ -1,4 +1,4 @@
-﻿namespace EvaluateSensorLog.ClassLibrary.Models
+﻿namespace EvaluateSensorLog.Domain.Models
 {
     /// <summary>
     /// Represents an integer sensor reading record

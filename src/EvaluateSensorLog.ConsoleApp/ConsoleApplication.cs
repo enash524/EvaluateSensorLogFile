@@ -1,11 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using EvaluateSensorLog.ClassLibrary.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace EvaluateSensorLog.ConsoleApp
 {
+    /// <summary>
+    /// Main class to start the console application
+    /// </summary>
     public class ConsoleApplication
     {
         private readonly IEvaluateSensorLogRecords _evaluateSensorLogRecords;
@@ -25,18 +27,19 @@ namespace EvaluateSensorLog.ConsoleApp
         /// <summary>
         /// Run the program
         /// </summary>
-        public async Task Run()
+        /// <param name="path">The path to the sensor log input text file</param>
+        public async Task Run(string path)
         {
             try
             {
-                string input = await File.ReadAllTextAsync("input.txt");
-                string output = _evaluateSensorLogRecords.EvaluateLogFile(input);
+                string output = await _evaluateSensorLogRecords.EvaluateLogFileAsync(path);
 
                 Console.WriteLine("Devices and classification:");
                 Console.WriteLine(output);
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 Console.WriteLine($"Exception: {ex}");
             }
             finally

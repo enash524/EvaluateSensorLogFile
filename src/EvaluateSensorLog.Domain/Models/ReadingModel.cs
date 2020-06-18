@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EvaluateSensorLog.ClassLibrary.Models
+namespace EvaluateSensorLog.Domain.Models
 {
     /// <summary>
     /// Represents a generic sensor reading record

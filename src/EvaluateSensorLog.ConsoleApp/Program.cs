@@ -1,7 +1,8 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
+using EvaluateSensorLog.Application;
 using EvaluateSensorLog.ClassLibrary;
-using EvaluateSensorLog.ClassLibrary.Interfaces;
+using EvaluateSensorLog.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,9 +24,8 @@ namespace EvaluateSensorLog.ConsoleApp
             IConfiguration config = LoadConfiguration();
 
             // Add the config to our DI container for later user
-            services.AddSingleton(config);
-
             services
+                .AddSingleton(config)
                 .AddLogging(configure =>
                 {
                     configure
@@ -35,9 +35,9 @@ namespace EvaluateSensorLog.ConsoleApp
                             config.TimestampFormat = "yyyy-MM-dd hh:mm:ss tt ";
                         });
                 })
-                .AddTransient<IEvaluateSensorLogRecords, EvaluateSensorLogRecords>()
-                .AddTransient<IParseSensorRecordFile, ParseSensorRecordFile>()
-                .AddTransient<IValidateSensorRecord, ValidateSensorRecord>()
+                .AddApplication()
+                .AddClassLibrary()
+                .AddData()
                 .AddTransient<ConsoleApplication>();
 
             return services;
@@ -70,7 +70,7 @@ namespace EvaluateSensorLog.ConsoleApp
             serviceProvider.GetService<ILogger<Program>>().LogInformation("serviceProvider built");
 
             // Kick off our actual code
-            await serviceProvider.GetService<ConsoleApplication>().Run();
+            await serviceProvider.GetService<ConsoleApplication>().Run("input.txt");
         }
     }
 }

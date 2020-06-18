@@ -1,4 +1,4 @@
-﻿namespace EvaluateSensorLog.ClassLibrary.Models
+﻿namespace EvaluateSensorLog.Domain.Models
 {
     /// <summary>
     /// Sensor reference values
