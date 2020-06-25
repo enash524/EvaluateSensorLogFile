@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using EvaluateSensorLog.ClassLibrary.Models;
+using EvaluateSensorLog.Domain.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ParseSensorRecordFileTests
+namespace EvaluateSensorLog.Data.Tests.TestData.ParseSensorRecordFileTests
 {
     public class HandleReferenceValuesLogRecord : IEnumerable<object[]>
     {

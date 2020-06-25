@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using EvaluateSensorLog.ClassLibrary.Models;
+using EvaluateSensorLog.Domain;
+using EvaluateSensorLog.Domain.Models;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData
+namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
 {
     public class EvaluateHumidityLogRecordsInvalidInput : IEnumerable<object[]>
     {

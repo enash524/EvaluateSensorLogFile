@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EvaluateSensorLog.ClassLibrary\EvaluateSensorLog.ClassLibrary.csproj" />
+    <ProjectReference Include="..\..\src\EvaluateSensorLog.Data\EvaluateSensorLog.Data.csproj" />
     <ProjectReference Include="..\..\src\EvaluateSensorLog.Domain\EvaluateSensorLog.Domain.csproj" />
   </ItemGroup>
 

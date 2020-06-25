@@ -2,32 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EvaluateSensorLog.ClassLibrary.Interfaces;
-using EvaluateSensorLog.ClassLibrary.Models;
-using EvaluateSensorLog.ClassLibrary.Tests.TestData.ValidateSensorRecordTestsData;
+using EvaluateSensorLog.Data.Interfaces;
+using EvaluateSensorLog.Data.Repositories;
+using EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests;
+using EvaluateSensorLog.Domain.Models;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
-namespace EvaluateSensorLog.ClassLibrary.Tests
+namespace EvaluateSensorLog.Data.Tests
 {
     public class ValidateSensorRecordTests
     {
         private readonly object _logFile;
-        private readonly Mock<ILogger<ValidateSensorRecord>> _logger;
+        private readonly Mock<ILogger<ValidateSensorRecordRepository>> _logger;
         private readonly MethodInfo[] _methodInfos;
         private readonly Type _type;
-        private readonly IValidateSensorRecord _validateSensorRecord;
+        private readonly IValidateSensorRecordRepository _validateSensorRecordRepository;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidateSensorRecordTests`1"/> class.
         /// </summary>
         public ValidateSensorRecordTests()
         {
-            _logger = new Mock<ILogger<ValidateSensorRecord>>();
-            _validateSensorRecord = new ValidateSensorRecord(_logger.Object);
-            _type = typeof(ValidateSensorRecord);
+            _logger = new Mock<ILogger<ValidateSensorRecordRepository>>();
+            _validateSensorRecordRepository = new ValidateSensorRecordRepository(_logger.Object);
+            _type = typeof(ValidateSensorRecordRepository);
             _logFile = Activator.CreateInstance(_type, _logger.Object);
             _methodInfos = _type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
         }
@@ -142,7 +143,7 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
                 .And
                 .HaveCount(expected.Count)
                 .And
-                .BeEquivalentTo(expected);
+                .Equal(expected);
         }
 
         [Theory]
@@ -160,7 +161,11 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
             // Assert
             actual
                 .Should()
-                .BeEquivalentTo(expected);
+                .NotBeNullOrEmpty()
+                .And
+                .HaveCount(expected.Count)
+                .And
+                .Equal(expected);
         }
 
         [Theory]
@@ -254,7 +259,7 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
                 .And
                 .HaveCount(expected.Count)
                 .And
-                .BeEquivalentTo(expected);
+                .Equal(expected);
         }
 
         [Theory]
@@ -264,7 +269,7 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
             // Arrange
 
             // Act
-            Action actual = () => _validateSensorRecord.ValidateSensorLogRecords(sensorLogModel);
+            Action actual = () => _validateSensorRecordRepository.ValidateSensorLogRecords(sensorLogModel);
 
             // Assert
             actual
@@ -296,12 +301,14 @@ namespace EvaluateSensorLog.ClassLibrary.Tests
             // Arrange
 
             // Act
-            string actual = _validateSensorRecord.ValidateSensorLogRecords(sensorLogModel);
+            string actual = _validateSensorRecordRepository.ValidateSensorLogRecords(sensorLogModel);
 
             // Assert
             actual
                 .Should()
-                .BeEquivalentTo(expected);
+                .NotBeNullOrWhiteSpace()
+                .And
+                .Equals(expected);
         }
     }
 }
