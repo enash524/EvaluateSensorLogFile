@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿using System.IO.Abstractions;
 using FluentValidation;
 
 namespace EvaluateSensorLog.Application.Commands.ParseSensorRecordFile
@@ -11,10 +11,10 @@ namespace EvaluateSensorLog.Application.Commands.ParseSensorRecordFile
         /// <summary>
         /// Initializes a new instance of the <see cref="ParseSensorRecordCommandValidator`1"/> class.
         /// </summary>
-        public ParseSensorRecordCommandValidator()
+        public ParseSensorRecordCommandValidator(IFileSystem fileSystem)
         {
             RuleFor(x => !string.IsNullOrWhiteSpace(x.Path));
-            RuleFor(x => File.Exists(x.Path));
+            RuleFor(x => fileSystem.File.Exists(x.Path));
         }
     }
 }

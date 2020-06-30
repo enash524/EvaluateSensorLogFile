@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.IO.Abstractions;
 using System.Threading.Tasks;
 using EvaluateSensorLog.Application;
 using EvaluateSensorLog.ClassLibrary;
@@ -38,6 +39,7 @@ namespace EvaluateSensorLog.ConsoleApp
                 .AddApplication()
                 .AddClassLibrary()
                 .AddData()
+                .AddScoped<IFileSystem, FileSystem>()
                 .AddTransient<ConsoleApplication>();
 
             return services;

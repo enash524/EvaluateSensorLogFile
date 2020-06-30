@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.IO.Abstractions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using EvaluateSensorLog.Data.Interfaces;
@@ -14,6 +14,8 @@ namespace EvaluateSensorLog.Data.Repositories
     /// </summary>
     public class ParseSensorRecordRepository : IParseSensorRecordRepository
     {
+        private readonly IFileSystem _fileSystem;
+
         /// <summary>
         /// DI injected logger
         /// </summary>
@@ -23,8 +25,9 @@ namespace EvaluateSensorLog.Data.Repositories
         /// Initializes a new instance of the <see cref="ParseSensorRecordRepository`1"/> class.
         /// </summary>
         /// <param name="logger">DI injected logger</param>
-        public ParseSensorRecordRepository(ILogger<ParseSensorRecordRepository> logger)
+        public ParseSensorRecordRepository(IFileSystem fileSystem, ILogger<ParseSensorRecordRepository> logger)
         {
+            _fileSystem = fileSystem;
             _logger = logger;
         }
 
@@ -35,7 +38,7 @@ namespace EvaluateSensorLog.Data.Repositories
         /// <returns>A task representing the resulting sensor log model</returns>
         public async Task<SensorLogModel> ParseInputLogFileAsync(string path)
         {
-            string input = await File.ReadAllTextAsync(path);
+            string input = await _fileSystem.File.ReadAllTextAsync(path);
             SensorLogModel model = ParseInputLogFile(input);
 
             return model;

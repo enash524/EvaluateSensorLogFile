@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO.Abstractions;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace EvaluateSensorLog.Data.Tests
     public class ParseSensorRecordRepositoryTests
     {
         private readonly object _logFile;
+        private readonly Mock<IFileSystem> _fileSystem;
         private readonly Mock<ILogger<ParseSensorRecordRepository>> _logger;
         private readonly MethodInfo[] _methodInfos;
         private readonly IParseSensorRecordRepository _parseSensorRecordRepository;
@@ -26,8 +28,9 @@ namespace EvaluateSensorLog.Data.Tests
         /// </summary>
         public ParseSensorRecordRepositoryTests()
         {
+            _fileSystem = new Mock<IFileSystem>();
             _logger = new Mock<ILogger<ParseSensorRecordRepository>>();
-            _parseSensorRecordRepository = new ParseSensorRecordRepository(_logger.Object);
+            _parseSensorRecordRepository = new ParseSensorRecordRepository(_fileSystem.Object, _logger.Object);
             _type = typeof(ParseSensorRecordRepository);
             _logFile = Activator.CreateInstance(_type, _logger.Object);
             _methodInfos = _type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
