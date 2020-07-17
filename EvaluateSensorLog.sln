@@ -10,7 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A32DD4CF-9898-401C-A0E1-C0C8B3EB0D83}"
 	ProjectSection(SolutionItems) = preProject
 		docs\input.txt = docs\input.txt
-		ReadMe.md = ReadMe.md
+		docs\ReadMe.md = docs\ReadMe.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.ClassLibrary.Tests", "tests\EvaluateSensorLog.ClassLibrary.Tests\EvaluateSensorLog.ClassLibrary.Tests.csproj", "{57F23E6D-0544-4BF5-A904-50044F739AAF}"
@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.Applicati
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.Data.Tests", "tests\EvaluateSensorLog.Data.Tests\EvaluateSensorLog.Data.Tests.csproj", "{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateSensorLog.Common", "src\EvaluateSensorLog.Common\EvaluateSensorLog.Common.csproj", "{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.Common", "src\EvaluateSensorLog.Common\EvaluateSensorLog.Common.csproj", "{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
