@@ -13,8 +13,21 @@ namespace EvaluateSensorLog.Application.Commands.ParseSensorRecordFile
         /// </summary>
         public ParseSensorRecordCommandValidator(IFileSystem fileSystem)
         {
-            RuleFor(x => !string.IsNullOrWhiteSpace(x.Path));
-            RuleFor(x => fileSystem.File.Exists(x.Path));
+            RuleFor(x => x.Path)
+                .Custom((path, context) =>
+                {
+                    if (string.IsNullOrWhiteSpace(path))
+                    {
+                        context.AddFailure("Path cannot be null or whitespace.");
+                    }
+                    else
+                    {
+                        if (!fileSystem.File.Exists(path))
+                        {
+                            context.AddFailure($"{path} does not exist.");
+                        }
+                    }
+                });
         }
     }
 }

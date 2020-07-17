@@ -7,10 +7,18 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
 {
     public class EvaluateMonoxideLogRecords : IEnumerable<object[]>
     {
-        private static readonly List<KeyValuePair<string, string>> expected = new List<KeyValuePair<string, string>>
+        private static readonly List<MonoxideResultModel> expected = new List<MonoxideResultModel>
         {
-            new KeyValuePair<string, string>("Test-5", "keep"),
-            new KeyValuePair<string, string>("Test-6", "discard")
+            new MonoxideResultModel
+            {
+                SensorName = "Test-5",
+                MonoxideStatus = MonoxideStatus.Keep
+            },
+            new MonoxideResultModel
+            {
+                SensorName = "Test-6",
+                MonoxideStatus = MonoxideStatus.Discard
+            }
         };
 
         private static readonly List<MonoxideModel> monoxideModels = new List<MonoxideModel>
@@ -20,9 +28,21 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
                 Name = "Test-5",
                 Readings = new List<IntegerReadingModel>
                 {
-                    new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:04"), Value = 1 },
-                    new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:05"), Value = 4 },
-                    new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:06"), Value = 7 }
+                    new IntegerReadingModel
+                    {
+                        Timestamp = DateTime.Parse("2007-04-05T22:04"),
+                        Value = 1
+                    },
+                    new IntegerReadingModel
+                    {
+                        Timestamp = DateTime.Parse("2007-04-05T22:05"),
+                        Value = 4
+                    },
+                    new IntegerReadingModel
+                    {
+                        Timestamp = DateTime.Parse("2007-04-05T22:06"),
+                        Value = 7
+                    }
                 }
             },
             new MonoxideModel
@@ -30,9 +50,21 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
                 Name = "Test-6",
                 Readings = new List<IntegerReadingModel>
                 {
-                    new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:04"), Value = 1 },
-                    new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:05"), Value = 4 },
-                    new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:06"), Value = 8 }
+                    new IntegerReadingModel
+                    {
+                        Timestamp = DateTime.Parse("2007-04-05T22:04"),
+                        Value = 1
+                    },
+                    new IntegerReadingModel
+                    {
+                        Timestamp = DateTime.Parse("2007-04-05T22:05"),
+                        Value = 4
+                    },
+                    new IntegerReadingModel
+                    {
+                        Timestamp = DateTime.Parse("2007-04-05T22:06"),
+                        Value = 8
+                    }
                 }
             }
         };

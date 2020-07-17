@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EvaluateSensorLog.Application\EvaluateSensorLog.Application.csproj" />
+    <ProjectReference Include="..\EvaluateSensorLog.Common\EvaluateSensorLog.Common.csproj" />
     <ProjectReference Include="..\EvaluateSensorLog.Domain\EvaluateSensorLog.Domain.csproj" />
   </ItemGroup>
 

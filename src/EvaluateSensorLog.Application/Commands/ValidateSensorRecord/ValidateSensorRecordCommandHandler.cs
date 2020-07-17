@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using EvaluateSensorLog.Application.Models;
 using EvaluateSensorLog.Data.Interfaces;
+using EvaluateSensorLog.Domain.Models;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -12,7 +13,7 @@ namespace EvaluateSensorLog.Application.Commands.ValidateSensorRecord
     /// <summary>
     /// Handles the ValidateSensorRecordCommand
     /// </summary>
-    public class ValidateSensorRecordCommandHandler : IRequestHandler<ValidateSensorRecordCommand, CommandResult<string>>
+    public class ValidateSensorRecordCommandHandler : IRequestHandler<ValidateSensorRecordCommand, CommandResult<ValidateSensorLogModel>>
     {
         private readonly ILogger<ValidateSensorRecordCommandHandler> _logger;
         private readonly IValidateSensorRecordRepository _repository;
@@ -38,15 +39,15 @@ namespace EvaluateSensorLog.Application.Commands.ValidateSensorRecord
         /// <param name="command">ValidateSensorRecordCommand request parameters</param>
         /// <param name="cancellationToken">The token to monitor for cancellation requests. The default value is System.Threading.CancellationToken.None.</param>
         /// <returns>Returns a JSON string validation record wrapped in a CommandResult object</returns>
-        public Task<CommandResult<string>> Handle(ValidateSensorRecordCommand command, CancellationToken cancellationToken = default)
+        public Task<CommandResult<ValidateSensorLogModel>> Handle(ValidateSensorRecordCommand command, CancellationToken cancellationToken = default)
         {
             ValidationResult validation = _validator.Validate(command);
 
             if (!validation.IsValid)
             {
-                _logger.LogError("Validate Sensor Record produced errors {errors}", validation.ToString());
+                _logger.LogError("Validate Sensor Record produced errors: {errors}", validation.ToString());
 
-                CommandResult<string> invalidCommandResult = new CommandResult<string>()
+                CommandResult<ValidateSensorLogModel> invalidCommandResult = new CommandResult<ValidateSensorLogModel>
                 {
                     Result = null,
                     CommandResultType = CommandResultType.InvalidInput
@@ -55,13 +56,13 @@ namespace EvaluateSensorLog.Application.Commands.ValidateSensorRecord
                 return Task.FromResult(invalidCommandResult);
             }
 
-            string result = _repository.ValidateSensorLogRecords(command.SensorLogModel);
+            ValidateSensorLogModel result = _repository.ValidateSensorLogRecords(command.SensorLogModel);
 
-            if (string.IsNullOrWhiteSpace(result))
+            if (result == null)
             {
-                _logger.LogError("Validate Sensor Record produced an invalid result");
+                _logger.LogError("Validate Sensor Record produced an invalid result.");
 
-                CommandResult<string> errorCommandResult = new CommandResult<string>()
+                CommandResult<ValidateSensorLogModel> errorCommandResult = new CommandResult<ValidateSensorLogModel>
                 {
                     Result = null,
                     CommandResultType = CommandResultType.Error
@@ -70,7 +71,7 @@ namespace EvaluateSensorLog.Application.Commands.ValidateSensorRecord
                 return Task.FromResult(errorCommandResult);
             }
 
-            CommandResult<string> commandResult = new CommandResult<string>()
+            CommandResult<ValidateSensorLogModel> commandResult = new CommandResult<ValidateSensorLogModel>
             {
                 Result = result,
                 CommandResultType = CommandResultType.Success

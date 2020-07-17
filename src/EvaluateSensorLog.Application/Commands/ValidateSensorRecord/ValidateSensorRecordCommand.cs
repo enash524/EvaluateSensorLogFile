@@ -7,7 +7,7 @@ namespace EvaluateSensorLog.Application.Commands.ValidateSensorRecord
     /// <summary>
     ///Provides the properties needed to run the ValidateSensorRecordCommandHandler
     /// </summary>
-    public class ValidateSensorRecordCommand : IRequest<CommandResult<string>>
+    public class ValidateSensorRecordCommand : IRequest<CommandResult<ValidateSensorLogModel>>
     {
         /// <summary>
         /// The SensorLogModel to validate

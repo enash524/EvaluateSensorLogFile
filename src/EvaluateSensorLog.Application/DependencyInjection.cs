@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +17,9 @@ namespace EvaluateSensorLog.Application
         /// <returns>The Microsoft.Extensions.DependencyInjection.IServiceCollection so that additional calls can be chained.</returns>
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddMediatR(Assembly.GetExecutingAssembly());
+            services
+                .AddMediatR(Assembly.GetExecutingAssembly())
+                .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
             return services;
         }

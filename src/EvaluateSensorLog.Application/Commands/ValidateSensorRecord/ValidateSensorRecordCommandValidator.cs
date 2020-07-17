@@ -12,7 +12,7 @@ namespace EvaluateSensorLog.Application.Commands.ValidateSensorRecord
         /// </summary>
         public ValidateSensorRecordCommandValidator()
         {
-            RuleFor(x => x.SensorLogModel != null);
+            RuleFor(x => x.SensorLogModel).NotNull();
         }
     }
 }

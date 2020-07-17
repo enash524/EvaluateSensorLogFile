@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using EvaluateSensorLog.Application.Commands.ParseSensorRecordFile;
 using EvaluateSensorLog.Application.Commands.ValidateSensorRecord;
 using EvaluateSensorLog.Application.Models;
 using EvaluateSensorLog.ClassLibrary.Interfaces;
+using EvaluateSensorLog.Common.Extensions;
 using EvaluateSensorLog.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -41,13 +44,57 @@ namespace EvaluateSensorLog.ClassLibrary
         {
             CommandResult<SensorLogModel> sensorLogModel = await SendSensorLogCommandAsync(path);
 
-            // TODO - VALIDATE COMMAND RESULT!!!
+            if (sensorLogModel.CommandResultType != CommandResultType.Success)
+            {
+                _logger.LogError("Send Sensor Log Command Async with Path: {path} produced errors and returned status: {status}", path, sensorLogModel.CommandResultType);
+                return null;
+            }
 
-            CommandResult<string> result = await SendValidateSensorRecordCommandAsync(sensorLogModel.Result);
+            CommandResult<ValidateSensorLogModel> validateSensorLogModel = await SendValidateSensorRecordCommandAsync(sensorLogModel.Result);
 
-            // TODO - VALIDATE SENSOR RECORD VALIDATION RESULT!!!
+            if (validateSensorLogModel.CommandResultType != CommandResultType.Success)
+            {
+                _logger.LogError("Send Validate Sensor Record Command Async with Path: {path} produced errors and returned status: {status}", path, validateSensorLogModel.CommandResultType);
+                return null;
+            }
 
-            return result.Result;
+            string result = GenerateOutput(validateSensorLogModel.Result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Generates a JSON string representing the sensor log quality control evaluation
+        /// </summary>
+        /// <param name="validateSensorLogModel">The validated sensor log model</param>
+        /// <returns>A JSON string representing the sensor log quality control evaluation</returns>
+        private string GenerateOutput(ValidateSensorLogModel validateSensorLogModel)
+        {
+            Dictionary<string, string> results = new Dictionary<string, string>();
+
+            foreach (ThermometerResultModel thermometerResultModel in validateSensorLogModel.ThermometerResults)
+            {
+                results.Add(thermometerResultModel.SensorName, thermometerResultModel.ThermometerStatus.GetDescription().ToLower());
+            }
+
+            foreach (HumidityResultModel humidityResultModel in validateSensorLogModel.HumidityResults)
+            {
+                results.Add(humidityResultModel.SensorName, humidityResultModel.HumidityStatus.GetDescription().ToLower());
+            }
+
+            foreach (MonoxideResultModel monoxideResultModel in validateSensorLogModel.MonoxideResults)
+            {
+                results.Add(monoxideResultModel.SensorName, monoxideResultModel.MonoxideStatus.GetDescription().ToLower());
+            }
+
+            JsonSerializerOptions options = new JsonSerializerOptions
+            {
+                WriteIndented = true
+            };
+
+            string jsonString = JsonSerializer.Serialize(results, options);
+
+            return jsonString;
         }
 
         /// <summary>
@@ -70,7 +117,7 @@ namespace EvaluateSensorLog.ClassLibrary
         /// </summary>
         /// <param name="sensorLogModel">The sensor log model to validate</param>
         /// <returns>The result of the command</returns>
-        private Task<CommandResult<string>> SendValidateSensorRecordCommandAsync(SensorLogModel sensorLogModel)
+        private Task<CommandResult<ValidateSensorLogModel>> SendValidateSensorRecordCommandAsync(SensorLogModel sensorLogModel)
         {
             ValidateSensorRecordCommand command = new ValidateSensorRecordCommand
             {

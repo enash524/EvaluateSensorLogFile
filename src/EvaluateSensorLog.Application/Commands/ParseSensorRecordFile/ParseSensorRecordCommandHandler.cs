@@ -47,7 +47,7 @@ namespace EvaluateSensorLog.Application.Commands.ParseSensorRecordFile
 
             if (!validation.IsValid)
             {
-                _logger.LogError("Parse Sensor Record Command with Path: {path} produced errors on validation {errors}", command.Path, validation.ToString());
+                _logger.LogError("Parse Sensor Record Command with Path: {path} produced errors on validation: {errors}", command.Path, validation.ToString());
 
                 return new CommandResult<SensorLogModel>
                 {
@@ -60,7 +60,7 @@ namespace EvaluateSensorLog.Application.Commands.ParseSensorRecordFile
 
             if (result == null)
             {
-                _logger.LogError("Parse Sensor Record Command with Path: {path} produced an invalid result", command.Path);
+                _logger.LogError("Parse Sensor Record Command with Path: {path} produced an invalid result.", command.Path);
 
                 return new CommandResult<SensorLogModel>
                 {

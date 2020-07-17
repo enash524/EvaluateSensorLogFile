@@ -12,7 +12,7 @@ namespace EvaluateSensorLog.Data.Interfaces
         /// </summary>
         /// <param name="sensorLogModel">The sensor log input model</param>
         /// <exception cref="ArgumentException">sensorLogModel is null or sensorLogModel.ReverenceValues is null</exception>
-        /// <returns>A JSON string representing the sensor log quality control evaluation</returns>
-        string ValidateSensorLogRecords(SensorLogModel sensorLogModel);
+        /// <returns>A model representing the sensor log quality control evaluation</returns>
+        ValidateSensorLogModel ValidateSensorLogRecords(SensorLogModel sensorLogModel);
     }
 }

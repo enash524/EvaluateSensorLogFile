@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{A32DD4CF-9898-401C-A0E1-C0C8B3EB0D83}"
 	ProjectSection(SolutionItems) = preProject
 		docs\input.txt = docs\input.txt
+		ReadMe.md = ReadMe.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.ClassLibrary.Tests", "tests\EvaluateSensorLog.ClassLibrary.Tests\EvaluateSensorLog.ClassLibrary.Tests.csproj", "{57F23E6D-0544-4BF5-A904-50044F739AAF}"
@@ -26,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.Data", "s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.Application.Tests", "tests\EvaluateSensorLog.Application.Tests\EvaluateSensorLog.Application.Tests.csproj", "{C631E588-36B2-42BD-8B2B-9DE10F225035}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateSensorLog.Data.Tests", "tests\EvaluateSensorLog.Data.Tests\EvaluateSensorLog.Data.Tests.csproj", "{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EvaluateSensorLog.Data.Tests", "tests\EvaluateSensorLog.Data.Tests\EvaluateSensorLog.Data.Tests.csproj", "{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EvaluateSensorLog.Common", "src\EvaluateSensorLog.Common\EvaluateSensorLog.Common.csproj", "{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +69,10 @@ Global
 		{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C26225C-EC05-4E8C-BFFF-3C1E7105778E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +86,7 @@ Global
 		{96496E7B-2FAF-43AC-8C48-195F6180846F} = {A3166663-8C59-4A95-9C7F-51A2002FC0AB}
 		{C631E588-36B2-42BD-8B2B-9DE10F225035} = {0911D5F5-3073-4F47-86AC-E48446ACB67A}
 		{1B8FC162-CFAB-4DC3-A920-8A1AE9EE1B27} = {0911D5F5-3073-4F47-86AC-E48446ACB67A}
+		{0C26225C-EC05-4E8C-BFFF-3C1E7105778E} = {A3166663-8C59-4A95-9C7F-51A2002FC0AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D5F3C11E-3CBB-4121-ACFB-0E70585309A5}

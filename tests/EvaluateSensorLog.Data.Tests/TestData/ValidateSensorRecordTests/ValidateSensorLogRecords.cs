@@ -7,48 +7,32 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
 {
     public class ValidateSensorLogRecords : IEnumerable<object[]>
     {
-        private const string expected = "{\r\n  \"test-1\": \"ultra precise\",\r\n  \"test-2\": \"precise\",\r\n  \"test-3\": \"keep\",\r\n  \"test-4\": \"discard\",\r\n  \"test-5\": \"keep\",\r\n  \"test-6\": \"discard\"\r\n}";
-
-        private static readonly SensorLogModel sensorLogModel = new SensorLogModel();
-
-        public ValidateSensorLogRecords()
+        private static readonly ValidateSensorLogModel _expected = new ValidateSensorLogModel
         {
-            ReferenceValuesModel referenceValuesModel = new ReferenceValuesModel
+            HumidityResults = new List<HumidityResultModel>
             {
-                ThermometerReferenceValue = 70.0m,
-                HumidityReferenceValue = 1.5m,
-                MonoxideReferenceValue = 4
-            };
-
-            List<ThermometerModel> thermometerModels = new List<ThermometerModel>
+                new HumidityResultModel { SensorName = "Test-3", HumidityStatus = HumidityStatus.Keep },
+                new HumidityResultModel { SensorName = "Test-4", HumidityStatus = HumidityStatus.Discard }
+            },
+            MonoxideResults = new List<MonoxideResultModel>
             {
-                new ThermometerModel
-                {
-                    Name = "Test-1",
-                    Readings = new List<DecimalReadingModel>
-                    {
-                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:00"), Value = 70.0m },
-                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:01"), Value = 70.5m },
-                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:02"), Value = 69.5m },
-                    }
-                },
-                new ThermometerModel
-                {
-                    Name = "Test-2",
-                    Readings = new List<DecimalReadingModel>
-                    {
-                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:00"), Value = 72.4m },
-                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:01"), Value = 76.0m },
-                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:02"), Value = 79.1m },
-                    }
-                }
-            };
+                new MonoxideResultModel { SensorName = "Test-5", MonoxideStatus = MonoxideStatus.Keep },
+                new MonoxideResultModel { SensorName = "Test-6", MonoxideStatus = MonoxideStatus.Discard }
+            },
+            ThermometerResults = new List<ThermometerResultModel>
+            {
+                new ThermometerResultModel { SensorName = "Test-1", ThermometerStatus = ThermometerStatus.UltraPrecise },
+                new ThermometerResultModel { SensorName = "Test-2", ThermometerStatus = ThermometerStatus.Precise }
+            }
+        };
 
-            List<HumidityModel> humidityModels = new List<HumidityModel>
+        private static readonly SensorLogModel _sensorLogModel = new SensorLogModel
+        {
+            HumidityReadings = new List<HumidityModel>
             {
                 new HumidityModel
                 {
-                    Name = "Test-3",
+                    Name = "hum-1",
                     Readings = new List<DecimalReadingModel>
                     {
                         new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:04"), Value = 1.0m },
@@ -58,7 +42,7 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
                 },
                 new HumidityModel
                 {
-                    Name = "Test-4",
+                    Name = "hum-2",
                     Readings = new List<DecimalReadingModel>
                     {
                         new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:04"), Value = 1.0m },
@@ -66,13 +50,12 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
                         new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:06"), Value = 0.5m }
                     }
                 }
-            };
-
-            List<MonoxideModel> monoxideModels = new List<MonoxideModel>
+            },
+            MonoxideReadings = new List<MonoxideModel>
             {
                 new MonoxideModel
                 {
-                    Name = "Test-5",
+                    Name = "mon-1",
                     Readings = new List<IntegerReadingModel>
                     {
                         new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:04"), Value = 1 },
@@ -82,7 +65,7 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
                 },
                 new MonoxideModel
                 {
-                    Name = "Test-6",
+                    Name = "mon-2",
                     Readings = new List<IntegerReadingModel>
                     {
                         new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:04"), Value = 1 },
@@ -90,17 +73,41 @@ namespace EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests
                         new IntegerReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:06"), Value = 8 }
                     }
                 }
-            };
-
-            sensorLogModel.ReferenceValues = referenceValuesModel;
-            sensorLogModel.ThermometerReadings = thermometerModels;
-            sensorLogModel.HumidityReadings = humidityModels;
-            sensorLogModel.MonoxideReadings = monoxideModels;
-        }
+            },
+            ReferenceValues = new ReferenceValuesModel
+            {
+                ThermometerReferenceValue = 70.0m,
+                HumidityReferenceValue = 1.5m,
+                MonoxideReferenceValue = 4
+            },
+            ThermometerReadings = new List<ThermometerModel>
+            {
+                new ThermometerModel
+                {
+                    Name = "temp-1",
+                    Readings = new List<DecimalReadingModel>
+                    {
+                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:00"), Value = 70.0m },
+                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:01"), Value = 70.5m },
+                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:02"), Value = 69.5m },
+                    }
+                },
+                new ThermometerModel
+                {
+                    Name = "temp-2",
+                    Readings = new List<DecimalReadingModel>
+                    {
+                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:00"), Value = 72.4m },
+                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:01"), Value = 76.0m },
+                        new DecimalReadingModel { Timestamp = DateTime.Parse("2007-04-05T22:02"), Value = 79.1m },
+                    }
+                }
+            }
+        };
 
         public IEnumerator<object[]> GetEnumerator()
         {
-            yield return new object[] { sensorLogModel, expected };
+            yield return new object[] { _sensorLogModel, _expected };
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();

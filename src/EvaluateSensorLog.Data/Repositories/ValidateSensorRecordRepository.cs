@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using EvaluateSensorLog.Data.Interfaces;
 using EvaluateSensorLog.Domain;
 using EvaluateSensorLog.Domain.Models;
@@ -33,8 +32,8 @@ namespace EvaluateSensorLog.Data.Repositories
         /// </summary>
         /// <param name="sensorLogModel">The sensor log input model</param>
         /// <exception cref="ArgumentNullException">sensorLogModel is null or sensorLogModel.ReverenceValues is null</exception>
-        /// <returns>A JSON string representing the sensor log quality control evaluation</returns>
-        public string ValidateSensorLogRecords(SensorLogModel sensorLogModel)
+        /// <returns>A model representing the sensor log quality control evaluation</returns>
+        public ValidateSensorLogModel ValidateSensorLogRecords(SensorLogModel sensorLogModel)
         {
             if (sensorLogModel == null)
             {
@@ -48,29 +47,14 @@ namespace EvaluateSensorLog.Data.Repositories
                 throw new ArgumentNullException(nameof(sensorLogModel.ReferenceValues), Messages.NullValue);
             }
 
-            Dictionary<string, string> results = new Dictionary<string, string>();
-            List<KeyValuePair<string, string>> thermometerResult = EvaluateThermometerLogRecords(sensorLogModel.ThermometerReadings, sensorLogModel.ReferenceValues.ThermometerReferenceValue);
-            List<KeyValuePair<string, string>> humidityResult = EvaluateHumidityLogRecords(sensorLogModel.HumidityReadings, sensorLogModel.ReferenceValues.HumidityReferenceValue);
-            List<KeyValuePair<string, string>> monoxideResult = EvaluateMonoxideLogRecords(sensorLogModel.MonoxideReadings, sensorLogModel.ReferenceValues.MonoxideReferenceValue);
-            List<KeyValuePair<string, string>> recordResults = new List<KeyValuePair<string, string>>();
-
-            recordResults.AddRange(thermometerResult);
-            recordResults.AddRange(humidityResult);
-            recordResults.AddRange(monoxideResult);
-
-            foreach (KeyValuePair<string, string> kvp in recordResults)
+            ValidateSensorLogModel resultModel = new ValidateSensorLogModel
             {
-                results.Add(kvp.Key, kvp.Value);
-            }
-
-            JsonSerializerOptions options = new JsonSerializerOptions
-            {
-                WriteIndented = true
+                HumidityResults = EvaluateHumidityLogRecords(sensorLogModel.HumidityReadings, sensorLogModel.ReferenceValues.HumidityReferenceValue),
+                MonoxideResults = EvaluateMonoxideLogRecords(sensorLogModel.MonoxideReadings, sensorLogModel.ReferenceValues.MonoxideReferenceValue),
+                ThermometerResults = EvaluateThermometerLogRecords(sensorLogModel.ThermometerReadings, sensorLogModel.ReferenceValues.ThermometerReferenceValue)
             };
 
-            string jsonString = JsonSerializer.Serialize(results, options);
-
-            return jsonString;
+            return resultModel;
         }
 
         /// <summary>
@@ -101,7 +85,7 @@ namespace EvaluateSensorLog.Data.Repositories
         /// <param name="referenceValue">The humidity reference value</param>
         /// <exception cref="ArgumentException">humidityModel collection is null or empty</exception>
         /// <returns>A list of key value pairs which represents the sensor name and quality control evaluation</returns>
-        private List<KeyValuePair<string, string>> EvaluateHumidityLogRecords(List<HumidityModel> humidityModel, decimal referenceValue)
+        private List<HumidityResultModel> EvaluateHumidityLogRecords(List<HumidityModel> humidityModel, decimal referenceValue)
         {
             if (humidityModel == null || humidityModel.Count == 0)
             {
@@ -109,18 +93,22 @@ namespace EvaluateSensorLog.Data.Repositories
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(humidityModel));
             }
 
-            List<KeyValuePair<string, string>> kvp = new List<KeyValuePair<string, string>>();
+            List<HumidityResultModel> results = new List<HumidityResultModel>();
 
             foreach (HumidityModel model in humidityModel)
             {
                 bool passed = model.Readings.All(h => referenceValue - 1m <= h.Value && h.Value <= referenceValue + 1m);
-                string status = passed ? "keep" : "discard";
-                KeyValuePair<string, string> result = new KeyValuePair<string, string>(model.Name, status);
+                HumidityStatus status = passed ? HumidityStatus.Keep : HumidityStatus.Discard;
+                HumidityResultModel resultModel = new HumidityResultModel
+                {
+                    SensorName = model.Name,
+                    HumidityStatus = status
+                };
 
-                kvp.Add(result);
+                results.Add(resultModel);
             }
 
-            return kvp;
+            return results;
         }
 
         /// <summary>
@@ -130,7 +118,7 @@ namespace EvaluateSensorLog.Data.Repositories
         /// <param name="referenceValue">The monoxide reference value</param>
         /// <exception cref="ArgumentException">monoxideModel collection is null or empty</exception>
         /// <returns>A list of key value pairs which represents the sensor name and quality control evaluation</returns>
-        private List<KeyValuePair<string, string>> EvaluateMonoxideLogRecords(List<MonoxideModel> monoxideModel, int referenceValue)
+        private List<MonoxideResultModel> EvaluateMonoxideLogRecords(List<MonoxideModel> monoxideModel, int referenceValue)
         {
             if (monoxideModel == null || monoxideModel.Count == 0)
             {
@@ -138,18 +126,22 @@ namespace EvaluateSensorLog.Data.Repositories
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(monoxideModel));
             }
 
-            List<KeyValuePair<string, string>> kvp = new List<KeyValuePair<string, string>>();
+            List<MonoxideResultModel> results = new List<MonoxideResultModel>();
 
             foreach (MonoxideModel model in monoxideModel)
             {
                 bool passed = model.Readings.All(r => referenceValue - 3 <= r.Value && r.Value <= referenceValue + 3);
-                string status = passed ? "keep" : "discard";
-                KeyValuePair<string, string> result = new KeyValuePair<string, string>(model.Name, status);
+                MonoxideStatus status = passed ? MonoxideStatus.Keep : MonoxideStatus.Discard;
+                MonoxideResultModel resultModel = new MonoxideResultModel
+                {
+                    SensorName = model.Name,
+                    MonoxideStatus = status
+                };
 
-                kvp.Add(result);
+                results.Add(resultModel);
             }
 
-            return kvp;
+            return results;
         }
 
         /// <summary>
@@ -158,8 +150,8 @@ namespace EvaluateSensorLog.Data.Repositories
         /// <param name="thermometerModel">List of the thermometer sensors and their reading log records</param>
         /// <param name="referenceValue">Thermometer reference value</param>
         /// <exception cref="ArgumentException">thermometerModel collection is null or empty</exception>
-        /// <returns>A list of key value pairs which represents the sensor name and quality control evaluation</returns>
-        private List<KeyValuePair<string, string>> EvaluateThermometerLogRecords(List<ThermometerModel> thermometerModel, decimal referenceValue)
+        /// <returns>A list of hermometerResultModel which represents the sensor name and quality control evaluation</returns>
+        private List<ThermometerResultModel> EvaluateThermometerLogRecords(List<ThermometerModel> thermometerModel, decimal referenceValue)
         {
             if (thermometerModel == null || thermometerModel.Count == 0)
             {
@@ -167,19 +159,23 @@ namespace EvaluateSensorLog.Data.Repositories
                 throw new ArgumentException(Messages.NullEmptyCollection, nameof(thermometerModel));
             }
 
-            List<KeyValuePair<string, string>> kvp = new List<KeyValuePair<string, string>>();
+            List<ThermometerResultModel> results = new List<ThermometerResultModel>();
 
             foreach (ThermometerModel model in thermometerModel)
             {
                 decimal averageValue = Math.Round(model.Readings.Average(r => r.Value), 1);
                 decimal standardDeviation = Math.Round(ComputeStandardDeviation(model.Readings), 1);
-                string status = GenerateThermometerStatus(referenceValue, averageValue, standardDeviation);
-                KeyValuePair<string, string> result = new KeyValuePair<string, string>(model.Name, status);
+                ThermometerStatus status = GenerateThermometerStatus(referenceValue, averageValue, standardDeviation);
+                ThermometerResultModel resultModel = new ThermometerResultModel
+                {
+                    SensorName = model.Name,
+                    ThermometerStatus = status
+                };
 
-                kvp.Add(result);
+                results.Add(resultModel);
             }
 
-            return kvp;
+            return results;
         }
 
         /// <summary>
@@ -189,21 +185,21 @@ namespace EvaluateSensorLog.Data.Repositories
         /// <param name="averageValue">Thermometer log records average value</param>
         /// <param name="standardDeviation">Thermometer log records standard deviation</param>
         /// <returns>Thermometer status</returns>
-        private string GenerateThermometerStatus(decimal referenceValue, decimal averageValue, decimal standardDeviation)
+        private ThermometerStatus GenerateThermometerStatus(decimal referenceValue, decimal averageValue, decimal standardDeviation)
         {
             if (referenceValue - 0.5m <= averageValue && averageValue <= referenceValue + 0.5m)
             {
                 if (standardDeviation < 3)
                 {
-                    return "ultra precise";
+                    return ThermometerStatus.UltraPrecise;
                 }
                 else if (standardDeviation < 5)
                 {
-                    return "very precise";
+                    return ThermometerStatus.VeryPrecise;
                 }
             }
 
-            return "precise";
+            return ThermometerStatus.Precise;
         }
     }
 }

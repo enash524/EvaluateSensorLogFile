@@ -7,6 +7,7 @@ using EvaluateSensorLog.Data.Repositories;
 using EvaluateSensorLog.Data.Tests.TestData.ValidateSensorRecordTests;
 using EvaluateSensorLog.Domain.Models;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -46,27 +47,30 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { readings });
 
             // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<TargetInvocationException>()
+                    .WithInnerException<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
@@ -101,32 +105,35 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { humidityModel, referenceValue });
 
             // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<TargetInvocationException>()
+                    .WithInnerException<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
         [ClassData(typeof(EvaluateHumidityLogRecords))]
-        public void EvaluateHumidityLogRecordsTest(List<HumidityModel> humidityModel, decimal referenceValue, List<KeyValuePair<string, string>> expected)
+        public void EvaluateHumidityLogRecordsTest(List<HumidityModel> humidityModel, decimal referenceValue, List<HumidityResultModel> expected)
         {
             // Arrange
             MethodInfo methodInfo = _methodInfos
@@ -134,7 +141,7 @@ namespace EvaluateSensorLog.Data.Tests
                 .First();
 
             // Act
-            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(_logFile, new object[] { humidityModel, referenceValue });
+            List<HumidityResultModel> actual = (List<HumidityResultModel>)methodInfo.Invoke(_logFile, new object[] { humidityModel, referenceValue });
 
             // Assert
             actual
@@ -143,12 +150,12 @@ namespace EvaluateSensorLog.Data.Tests
                 .And
                 .HaveCount(expected.Count)
                 .And
-                .Equal(expected);
+                .BeEquivalentTo(expected);
         }
 
         [Theory]
         [ClassData(typeof(EvaluateMonoxideLogRecords))]
-        public void EvaluateMonoxideLogRecordsTest(List<MonoxideModel> monoxideModel, int referenceValue, List<KeyValuePair<string, string>> expected)
+        public void EvaluateMonoxideLogRecordsTest(List<MonoxideModel> monoxideModel, int referenceValue, List<MonoxideResultModel> expected)
         {
             // Arrange
             MethodInfo methodInfo = _methodInfos
@@ -156,7 +163,7 @@ namespace EvaluateSensorLog.Data.Tests
                 .First();
 
             // Act
-            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(_logFile, new object[] { monoxideModel, referenceValue });
+            List<MonoxideResultModel> actual = (List<MonoxideResultModel>)methodInfo.Invoke(_logFile, new object[] { monoxideModel, referenceValue });
 
             // Assert
             actual
@@ -165,7 +172,7 @@ namespace EvaluateSensorLog.Data.Tests
                 .And
                 .HaveCount(expected.Count)
                 .And
-                .Equal(expected);
+                .BeEquivalentTo(expected);
         }
 
         [Theory]
@@ -181,27 +188,30 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { monoxideModel, referenceValue });
 
             // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<TargetInvocationException>()
+                    .WithInnerException<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
@@ -217,32 +227,35 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { thermometerModel, referenceValue });
 
             // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<TargetInvocationException>()
+                    .WithInnerException<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
         [ClassData(typeof(EvaluateThermometerLogRecords))]
-        public void EvaluateThermometerLogRecordsTest(List<ThermometerModel> thermometerModel, decimal referenceValue, List<KeyValuePair<string, string>> expected)
+        public void EvaluateThermometerLogRecordsTest(List<ThermometerModel> thermometerModel, decimal referenceValue, List<ThermometerResultModel> expected)
         {
             // Arrange
             MethodInfo methodInfo = _methodInfos
@@ -250,7 +263,7 @@ namespace EvaluateSensorLog.Data.Tests
                 .First();
 
             // Act
-            List<KeyValuePair<string, string>> actual = (List<KeyValuePair<string, string>>)methodInfo.Invoke(_logFile, new object[] { thermometerModel, referenceValue });
+            List<ThermometerResultModel> actual = (List<ThermometerResultModel>)methodInfo.Invoke(_logFile, new object[] { thermometerModel, referenceValue });
 
             // Assert
             actual
@@ -259,7 +272,7 @@ namespace EvaluateSensorLog.Data.Tests
                 .And
                 .HaveCount(expected.Count)
                 .And
-                .Equal(expected);
+                .BeEquivalentTo(expected);
         }
 
         [Theory]
@@ -272,41 +285,44 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => _validateSensorRecordRepository.ValidateSensorLogRecords(sensorLogModel);
 
             // Assert
-            actual
-                .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
         [ClassData(typeof(ValidateSensorLogRecords))]
-        public void ValidateSensorLogRecordsTest(SensorLogModel sensorLogModel, string expected)
+        public void ValidateSensorLogRecordsTest(SensorLogModel sensorLogModel, ValidateSensorLogModel expected)
         {
             // Arrange
 
             // Act
-            string actual = _validateSensorRecordRepository.ValidateSensorLogRecords(sensorLogModel);
+            ValidateSensorLogModel actual = _validateSensorRecordRepository.ValidateSensorLogRecords(sensorLogModel);
 
             // Assert
             actual
                 .Should()
-                .NotBeNullOrWhiteSpace()
+                .NotBeNull()
                 .And
                 .Equals(expected);
         }

@@ -8,6 +8,7 @@ using EvaluateSensorLog.Data.Repositories;
 using EvaluateSensorLog.Data.Tests.TestData.ParseSensorRecordFileTests;
 using EvaluateSensorLog.Domain.Models;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -32,7 +33,7 @@ namespace EvaluateSensorLog.Data.Tests
             _logger = new Mock<ILogger<ParseSensorRecordRepository>>();
             _parseSensorRecordRepository = new ParseSensorRecordRepository(_fileSystem.Object, _logger.Object);
             _type = typeof(ParseSensorRecordRepository);
-            _logFile = Activator.CreateInstance(_type, _logger.Object);
+            _logFile = Activator.CreateInstance(_type, _fileSystem.Object, _logger.Object);
             _methodInfos = _type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
@@ -49,27 +50,30 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { timestampInputValue, decimalInputValue });
 
             // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<TargetInvocationException>()
+                    .WithInnerException<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
@@ -105,27 +109,30 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { timestampInputValue, integerInputValue });
 
             // Assert
-            actual
-                .Should()
-                .Throw<TargetInvocationException>()
-                .WithInnerException<ArgumentException>()
-                .WithMessage(expected);
+            using (new AssertionScope())
+            {
+                actual
+                    .Should()
+                    .Throw<TargetInvocationException>()
+                    .WithInnerException<ArgumentException>()
+                    .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
@@ -161,27 +168,30 @@ namespace EvaluateSensorLog.Data.Tests
             Action actual = () => methodInfo.Invoke(_logFile, new object[] { thermometerInputValue, humidityInputValue, monoxideInputValue });
 
             // Assert
-            actual
+            using (new AssertionScope())
+            {
+                actual
                 .Should()
                 .Throw<TargetInvocationException>()
                 .WithInnerException<ArgumentException>()
                 .WithMessage(expected);
 
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
+                _logger.Invocations.Count
+                    .Should()
+                    .Be(1);
 
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
+                _logger.Invocations[0].Arguments[0]
+                    .Should()
+                    .Be(LogLevel.Error);
 
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
+                _logger
+                    .Verify(x => x.Log(LogLevel.Error,
+                        It.IsAny<EventId>(),
+                        It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
+                        It.IsAny<Exception>(),
+                        It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
+                        Times.Once());
+            }
         }
 
         [Theory]
@@ -205,46 +215,17 @@ namespace EvaluateSensorLog.Data.Tests
         }
 
         [Theory]
-        [ClassData(typeof(ParseInputLogFileInvalidInput))]
-        public void ParseInputLogFileInvalidInputTest(string path, string expected)
-        {
-            // Arrange
-
-            // Act
-            // TODO - NEED TO FIX THIS TEST!!!
-            Action actual = () => _parseSensorRecordRepository.ParseInputLogFileAsync(path);
-
-            // Assert
-            actual
-                .Should()
-                .Throw<ArgumentException>()
-                .WithMessage(expected);
-
-            _logger.Invocations.Count
-                .Should()
-                .Be(1);
-
-            _logger.Invocations[0].Arguments[0]
-                .Should()
-                .Be(LogLevel.Error);
-
-            _logger
-                .Verify(x => x.Log(LogLevel.Error,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((x, t) => string.Equals(x.ToString(), expected)),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),
-                    Times.Once());
-        }
-
-        [Theory]
         [ClassData(typeof(ParseInputLogFile))]
-        public async Task ParseInputLogFileTest(string path, SensorLogModel expected)
+        public async Task ParseInputLogFileTest(string input, SensorLogModel expected)
         {
             // Arrange
+            string path = @"C:\temp\file.txt";
+
+            _fileSystem
+                .Setup(fs => fs.File.ReadAllTextAsync(It.IsAny<string>(), default))
+                .ReturnsAsync(input);
 
             // Act
-            // TODO - NEED TO FIX THIS TEST!!!
             SensorLogModel actual = await _parseSensorRecordRepository.ParseInputLogFileAsync(path);
 
             // Assert
