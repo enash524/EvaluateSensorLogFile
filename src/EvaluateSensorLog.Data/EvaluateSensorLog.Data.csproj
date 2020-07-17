@@ -5,15 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="3.1.6" />
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    <PackageReference Include="System.IO.Abstractions" Version="12.0.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EvaluateSensorLog.Application\EvaluateSensorLog.Application.csproj" />
-    <ProjectReference Include="..\EvaluateSensorLog.Common\EvaluateSensorLog.Common.csproj" />
     <ProjectReference Include="..\EvaluateSensorLog.Domain\EvaluateSensorLog.Domain.csproj" />
   </ItemGroup>
 
