@@ -98,3 +98,64 @@ You should solve this problem in one of the following languages.
 You can assume you are submitting a PR for a feature that will go into production. You may use any library or tool available to you to solve this task.
 
 You will own this process and will be responsible for future expansions to the code. You should solve the problem as described but you are encouraged to be forward-thinking and advocate for any changes or demonstrate any practices that would improve the process (such as a change in log format, a change in the class interface, etc.). While the sample log file is small, production log files are likely to be very large, and 365-Widgets will be adding more sensor types (for example, a noise level detector) in the future.
+
+## Getting Started
+
+Use these instructions to get the project up and running.
+
+### Prerequisites
+
+You will need the following tools:
+
+* [Visual Studio Code or 2019](https://www.visualstudio.com/downloads/)
+* [.NET SDK 5](https://dotnet.microsoft.com/download/dotnet/5.0)
+
+### Setup
+
+Follow these steps to get your development environment set up:
+
+1. At the root directory, restore the required packages by running:
+
+    ```powershell
+    dotnet restore
+    ```
+
+2. Next, build the solution by running:
+
+    ```powershell
+    dotnet build
+    ```
+
+3. Next, within the `src\EvaluateSensorLog.ConsoleApp\bin\Debug\net5.0` directory, launch the program by running:
+
+    ```powershell
+    .\EvaluateSensorLog.ConsoleApp.exe
+    ```
+
+4. The program will write its output to STDOUT
+
+### Unit Tests
+
+Follow these steps to run unit tests:
+
+1. At the root directory, restore the required packages by running:
+
+    ```powershell
+    dotnet restore
+    ```
+
+2. Next, run the unit tests by running:
+
+    ```powershell
+    dotnet test
+    ```
+
+## Technologies
+
+* .NET 5
+* AutoMapper
+* FluentAssertions
+* FluentValidation
+* MediatR
+* Moq
+* xUnit
