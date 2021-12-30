@@ -7,6 +7,11 @@ namespace EvaluateSensorLog.Common.Extensions
 {
     public static class EnumExtensions
     {
+        /// <summary>
+        /// Returns the enum description attribute or the enum name if no description is present
+        /// </summary>
+        /// <param name="value">The Enum</param>
+        /// <returns>The string description of the enum or the enum name if no description is present</returns>
         public static string GetDescription(this Enum value)
         {
             Type genericEnumType = value.GetType();

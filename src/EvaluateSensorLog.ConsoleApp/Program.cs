@@ -31,7 +31,7 @@ namespace EvaluateSensorLog.ConsoleApp
                 {
                     configure
                         .AddConfiguration(config.GetSection("Logging"))
-                        .AddConsole(config =>
+                        .AddSimpleConsole(config =>
                         {
                             config.TimestampFormat = "yyyy-MM-dd hh:mm:ss tt ";
                         });
